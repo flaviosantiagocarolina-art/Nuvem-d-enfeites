@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Personalização 3D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+body { margin:0; background:#f0ede8; font-family:Arial; }
+#controls { padding:20px; background:white; }
+label { display:block; margin-top:10px; }
+canvas { display:block; margin:auto; }
+</style>
+</head>
+<body>
+
+<div id="controls">
+<h2>Personalize o seu bolo</h2>
+<label>Massa:
+<select id="massa">
+<option value="#d8b894">Baunilha</option>
+<option value="#6b4e2e">Chocolate</option>
+<option value="#f7e7c1">Chocolate Branco</option>
+</select>
+</label>
+
+<label>Cobertura:
+<select id="cobertura">
+<option value="#fff0f5">Chantilly</option>
+<option value="#f5c6c6">Morango</option>
+<option value="#e5d7b3">Caramelo</option>
+</select>
+</label>
+
+</div>
+
+<canvas id="cakeCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('cakeCanvas');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight * 0.7);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#f0ede8");
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/(window.innerHeight*0.7), 0.1, 100);
+camera.position.set(0, 2, 5);
+
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(5,5,5);
+scene.add(light);
+
+const geometry = new THREE.CylinderGeometry(1.5, 1.5, 1, 64);
+let material = new THREE.MeshPhongMaterial({color:"#d8b894"});
+const cake = new THREE.Mesh(geometry, material);
+scene.add(cake);
+
+function animate(){
+    requestAnimationFrame(animate);
+    cake.rotation.y += 0.01;
+    renderer.render(scene, camera);
+}
+animate();
+
+document.getElementById("massa").addEventListener("change", e=>{
+    cake.material.color.set(e.target.value);
+});
+
+document.getElementById("cobertura").addEventListener("change", e=>{
+    scene.background = new THREE.Color(e.target.value);
+});
+</script>
+
+</body>
+</html>
